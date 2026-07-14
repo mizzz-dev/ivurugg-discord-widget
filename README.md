@@ -23,16 +23,16 @@ ivuruGGの活動・ゲーム・開発情報を表示するDiscord向けプロフ
 
 ## 技術構成
 
-ビルド不要の静的構成です。
+依存パッケージなしの静的構成です。Cloudflare Pages向けにはNode.js標準機能だけで`dist`を生成します。
 
 ```text
 index.html
 styles.css
 script.js
 _headers
+package.json
+scripts/build.mjs
 ```
-
-Node.jsやパッケージインストールは不要です。
 
 ## ローカル確認
 
@@ -46,25 +46,46 @@ python -m http.server 8080
 
 `http://localhost:8080` を開きます。
 
+Cloudflare Pagesと同じ出力を確認する場合:
+
+```bash
+npm run build
+python -m http.server 8080 --directory dist
+```
+
 ## Cloudflare Pages設定
 
 GitHub連携済みPagesプロジェクトでは、以下の設定を使用します。
 
 | 設定 | 値 |
 | --- | --- |
+| Git repository | `mizzz-dev/ivurugg-discord-widget` |
 | Production branch | `main` |
 | Framework preset | `None` |
-| Build command | 空欄 |
-| Build output directory | `/` |
-| Root directory | `/` |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| Root directory | 空欄 |
 
-デプロイ後、Cloudflare Pagesの `Custom domains` から以下を追加します。
+設定変更後は、`Deployments`から最新コミットのデプロイを再実行します。
+
+デプロイ後、Cloudflare Pagesの`Custom domains`から以下を追加します。
 
 ```text
 widget.ivuru.ivrm.jp
 ```
 
-CloudflareがDNSレコードと証明書を自動設定できる状態では、その案内に従います。既存レコードが競合する場合は、同名のA / AAAA / CNAMEレコードを確認してから接続します。
+同名のWorker Route、Custom Domain、A / AAAA / CNAMEレコードが既に存在する場合は競合します。`Hello world`が表示される場合は、対象ドメインが初期Workerへ向いていないか確認し、正しいPagesプロジェクトへ割り当て直します。
+
+## 正常表示の確認
+
+正常に反映されると、ページタイトルと本文に以下が表示されます。
+
+```text
+ivuruGG Discord Widget
+Developer × Gamer
+```
+
+`Hello world`が表示される場合は、GitHubの`main`ではなくCloudflare初期テンプレートが配信されています。
 
 ## 次フェーズ
 
