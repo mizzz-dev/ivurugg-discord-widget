@@ -31,6 +31,9 @@ jobs:
       - name: 依存関係をインストール
         run: npm install --ignore-scripts
 
+      - name: Worker APIをテスト
+        run: npm test
+
       - name: Wrangler設定を検証
         run: npx wrangler deploy --dry-run
 
