@@ -1,22 +1,35 @@
-name: Cloudflareへデプロイ
+name: CI / Cloudflareデプロイ
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
+    inputs:
+      deploy:
+        description: Cloudflare Workersへ直接デプロイする
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
+
+concurrency:
+  group: cloudflare-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   NODE_VERSION: "20"
 
 jobs:
-  deploy:
-    name: Workersへデプロイ
+  verify:
+    name: テストとWrangler検証
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
       - name: リポジトリを取得
@@ -34,7 +47,37 @@ jobs:
         run: npm test
 
       - name: Wrangler設定を検証
-        run: npx wrangler deploy --dry-run
+        run: npm run deploy:dry-run
+
+  deploy:
+    name: Workersへ手動デプロイ
+    needs: verify
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+    steps:
+      - name: Cloudflare認証情報を確認
+        shell: bash
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::error::GitHub Actions SecretsにCLOUDFLARE_API_TOKENとCLOUDFLARE_ACCOUNT_IDを登録してください。"
+            exit 1
+          fi
+
+      - name: リポジトリを取得
+        uses: actions/checkout@v6
+
+      - name: Node.jsをセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 依存関係をインストール
+        run: npm install --ignore-scripts
 
       - name: Cloudflare Workersへデプロイ
         uses: cloudflare/wrangler-action@v3
