@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ivuruGG Discord Widget - Developer × Gamer">
+  <meta name="theme-color" content="#0f1117">
+  <title>ivuruGG Discord Widget</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="widget" aria-labelledby="profile-name">
+      <div class="widget__ambient" aria-hidden="true"></div>
+
+      <header class="widget__header">
+        <span class="status-pill"><span class="status-dot"></span>ONLINE</span>
+        <button class="theme-toggle" type="button" aria-label="テーマを切り替える" data-theme-toggle>
+          <span aria-hidden="true">◐</span>
+        </button>
+      </header>
+
+      <div class="profile">
+        <div class="avatar" aria-hidden="true">
+          <span>iv</span>
+        </div>
+        <div>
+          <p class="eyebrow">IVRM PROFILE WIDGET</p>
+          <h1 id="profile-name">ivuruGG</h1>
+          <p class="tagline">Developer × Gamer</p>
+        </div>
+      </div>
+
+      <p class="bio">
+        Web開発とゲームコミュニティ運営を中心に、IVRMのサービスやMinecraft環境を制作しています。
+      </p>
+
+      <section class="now-building" aria-labelledby="building-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">NOW BUILDING</p>
+            <h2 id="building-title">Discord Profile Widget</h2>
+          </div>
+          <span class="progress-value">32%</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="32">
+          <span class="progress-bar"></span>
+        </div>
+      </section>
+
+      <section class="stats" aria-label="アクティビティ">
+        <article class="stat-card">
+          <span class="stat-card__label">Minecraft</span>
+          <strong>4 <small>/ 10</small></strong>
+          <span class="stat-card__caption">Players online</span>
+        </article>
+        <article class="stat-card">
+          <span class="stat-card__label">GitHub</span>
+          <strong>128</strong>
+          <span class="stat-card__caption">Contributions</span>
+        </article>
+      </section>
+
+      <section class="favorites" aria-labelledby="favorites-title">
+        <div class="section-heading compact">
+          <div>
+            <p class="eyebrow">FAVORITE GAMES</p>
+            <h2 id="favorites-title">Playing now</h2>
+          </div>
+        </div>
+        <div class="game-list">
+          <span>Minecraft</span>
+          <span>崩壊：スターレイル</span>
+          <span>学園アイドルマスター</span>
+        </div>
+      </section>
+
+      <footer class="widget__footer">
+        <a href="https://ivrm.jp" target="_blank" rel="noreferrer">ivrm.jp</a>
+        <a href="https://github.com/mizzz-dev" target="_blank" rel="noreferrer">GitHub</a>
+        <button class="share-button" type="button" data-share>Share</button>
+      </footer>
+    </section>
+
+    <p class="page-note">Discord向けプロフィールウィジェット MVP</p>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>
